@@ -15,3 +15,8 @@ a lot of limitations and not adhering to them will lead to undesired behaviour.
 compile and run the question 1 by the following command:
 ```nasm -f elf64 q1.asm && gcc -o q1 q1.o -no-pie -z execstack -lm && ./q1```
 ---
+
+### Question 2:
+compile and run the question 1 by the following command:
+```nasm -f elf64 q2.asm && gcc -o q2 q2.o -no-pie -z execstack -lm && ./q2```
+---

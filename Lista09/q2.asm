@@ -1,5 +1,5 @@
 ; This was made for x86-64bits and need to compile using gcc for scanf. printf
-; compile and run: nasm -f elf64 q1.asm && gcc -o q1 q1.o -no-pie -z execstack -lm && ./q1
+; compile and run: nasm -f elf64 q2.asm && gcc -o q2 q2.o -no-pie -z execstack -lm && ./q2
 ; remember to be in the same directory as the file
 section .data
     prompt db "Type in an unsigned int : ",10, 0
@@ -25,18 +25,34 @@ main:
     lea rdi, [input_fmt]
     lea rsi, [num]
     call scanf
-    lea rbx, [num]
-_loop:
-    inc rcx
-    push rcx
-    cmp rcx, rbx
-    jl _loop
-    mov rax, 1 
-_loop2: 
-    pop rcx
-    mul rcx
-    cmp rcx, 0
-    jg _loop2
+    
+    mov rax, [num]  
+
+    cmp rax, 0
+    jne _cont
+    mov rax, 1
+    jmp _exit
+_cont:
+    ; Push all numbers from 1 to n onto the stack
+    mov rcx, 1        ; start from 1
+_push_loop:
+    cmp rcx, rax      
+    jg _push_done     
+    push rcx          
+    inc rcx           
+    jmp _push_loop    
+
+_push_done:
+    ; Now pop all numbers from the stack and multiply them
+    mov rax, 1        
+_pop_loop:
+    cmp rsp, rbp      ; check if we've popped all numbers (rsp == rbp)
+    je _exit
+    pop rcx           ; pop the top of the stack into rcx
+    mul rcx           ; rax = rax * rcx (multiply the current result with rcx)
+    jmp _pop_loop    
+
+
 _exit:
     ;#print res
     lea rdi, [output_fmt]
